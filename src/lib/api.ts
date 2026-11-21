@@ -4,6 +4,7 @@ import * as SecureStore from 'expo-secure-store';
 import * as Sharing from 'expo-sharing';
 
 import { API_URL } from './config';
+import { IS_DEMO, demoApi } from './demo';
 
 const TOKEN_KEY = 'formlex_token';
 let token: string | null = null;
@@ -26,6 +27,7 @@ export class ApiError extends Error {
 }
 
 export async function api<T = any>(path: string, options: { method?: string; body?: unknown } = {}): Promise<T> {
+  if (IS_DEMO) return demoApi(path) as T;
   let res: Response;
   try {
     res = await fetch(API_URL + path, {
@@ -47,6 +49,7 @@ export async function api<T = any>(path: string, options: { method?: string; bod
 
 /** Downloads an authenticated file (PDF, Word, invoice) and opens the share sheet so it can be saved or sent. */
 export async function downloadAndShare(path: string, filename: string, mimeType: string) {
+  if (IS_DEMO) return '';
   const res = await fetch(API_URL + path, { headers: { Authorization: `Bearer ${token}`, Accept: mimeType } });
   if (!res.ok) {
     const data = await res.json().catch(() => null);

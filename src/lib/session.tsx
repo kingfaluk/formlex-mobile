@@ -2,6 +2,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { api, loadToken, saveToken, setUnauthorizedHandler, type User } from './api';
+import { IS_DEMO, demoUser } from './demo';
 
 type Session = {
   ready: boolean;
@@ -13,12 +14,15 @@ type Session = {
 const Ctx = createContext<Session | null>(null);
 
 export function SessionProvider({ children }: { children: React.ReactNode }) {
-  const [ready, setReady] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  // Screenshot mode starts signed in as the sample client, unless the sign-in screen is requested.
+  const demoSignedIn = IS_DEMO && typeof location !== 'undefined' && !location.search.includes('signin');
+  const [ready, setReady] = useState(IS_DEMO);
+  const [user, setUser] = useState<User | null>(demoSignedIn ? demoUser : null);
 
   const clear = useCallback(async () => { await saveToken(null); setUser(null); }, []);
 
   useEffect(() => {
+    if (IS_DEMO) return;
     setUnauthorizedHandler(() => { void clear(); });
     (async () => {
       try {

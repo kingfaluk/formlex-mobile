@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { router, useFocusEffect } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 import { FlatList, Modal, Pressable, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Body, Button, Card, Field, Heading, Loading, Notice, Screen, Title, s, useErrorText } from '@/components/ui';
 import { api, type Jurisdiction, type Matter, type Plan, type Question, type Template } from '@/lib/api';
 import { useI18n } from '@/lib/i18n';
+import { IS_DEMO, demoAnswers, demoTemplates } from '@/lib/demo';
 import { confirmAndSubmit, documentPlan, money, openCheckout } from '@/lib/payment';
 import { colors, space } from '@/lib/theme';
 
@@ -19,14 +20,17 @@ export default function NewDocument() {
   const [templates, setTemplates] = useState<Template[] | null>(null);
   const [countries, setCountries] = useState<Jurisdiction[]>([]);
   const [plan, setPlan] = useState<Plan>();
-  const [tpl, setTpl] = useState<Template | null>(null);
-  const [step, setStep] = useState(0);
-  const [title, setTitle] = useState('');
+  // Screenshot mode can open on the questions (?demo=questions) or the review step (?demo=review).
+  const { demo } = useLocalSearchParams<{ demo?: string }>();
+  const preset = IS_DEMO && demo ? demoTemplates[0] : null;
+  const [tpl, setTpl] = useState<Template | null>(preset);
+  const [step, setStep] = useState(preset ? (demo === 'review' ? Math.ceil(preset.question_schema.length / PER_PAGE) + 1 : 1) : 0);
+  const [title, setTitle] = useState(preset ? 'House tenancy – Ntinda' : '');
   const [country, setCountry] = useState('UG');
   const [region, setRegion] = useState('');
   const [docLang, setDocLang] = useState('en');
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [consent, setConsent] = useState(false);
+  const [answers, setAnswers] = useState<Record<string, string>>(preset ? demoAnswers : {});
+  const [consent, setConsent] = useState(demo === 'review' && !!preset);
   const [phase, setPhase] = useState<'form' | 'paying' | 'waiting'>('form');
   const [matterId, setMatterId] = useState<number | null>(null);
   const [notice, setNotice] = useState<{ text: string; tone: 'info' | 'error' | 'ok' } | null>(null);
