@@ -1,18 +1,25 @@
 {
   "expo": {
-    "name": "formlex-mobile",
-    "slug": "formlex-mobile",
+    "name": "FormLex",
+    "slug": "formlex",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "formlexmobile",
-    "userInterfaceStyle": "automatic",
+    "scheme": "formlex",
+    "userInterfaceStyle": "light",
+    "description": "Legal documents drafted and reviewed for your country.",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "bundleIdentifier": "org.kodataltd.formlex",
+      "buildNumber": "1",
+      "supportsTablet": true,
+      "icon": "./assets/images/icon.png",
+      "config": { "usesNonExemptEncryption": false }
     },
     "android": {
+      "package": "org.kodataltd.formlex",
+      "versionCode": 1,
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#1d5a48",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
@@ -20,7 +27,7 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "output": "server",
+      "output": "single",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
@@ -28,11 +35,14 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#f7f5ef",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "imageWidth": 120
         }
-      ]
+      ],
+      "expo-secure-store",
+      "expo-sharing",
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true,

@@ -1,56 +1,48 @@
-# Welcome to your Expo app 👋
+# FormLex mobile app
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Android and iPhone app for FormLex clients (formlex.kodataltd.org). Built with Expo SDK 58 and Expo Router.
 
-## Get started
+What it does, in the five site languages (English, Español, Português, Français, العربية):
 
-1. Install dependencies
+- **Sign in** with a WhatsApp code (Kodata's `kodata_login_code` template) or email and password; create an account.
+- **New**: choose a document (or describe a custom one), the governing country and language, answer the questions, then **Pay & submit**. Pesapal opens in the in-app browser and returns to the app (`formlex://payment`); once the payment is confirmed the document is submitted for drafting and review.
+- **Documents**: documents waiting for payment or submission, documents in review, and released documents with PDF/Word download and change requests.
+- **Payments**: every transaction, with a PDF invoice for each completed payment.
+- **Help**: support tickets and replies.
+- **Account**: profile, language, terms and privacy, sign out.
 
-   ```bash
-   npm install
-   ```
+The app uses the same API as the website (`src/lib/config.ts`); nothing is stored on the phone except the sign-in token (secure storage) and the language choice.
 
-2. Start the app
+## Requirements
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Node 22+ (the server's default Node is 20, so use `/opt/node22/bin`):
 
 ```bash
-npm run reset-project
+export PATH=/opt/node22/bin:$PATH
+npm install
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+## Run it on a phone during development
 
-### Other setup steps
+```bash
+npx expo start            # scan the QR code with Expo Go (Android) or the Camera app (iPhone)
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Checks
 
-## Learn more
+```bash
+npx tsc --noEmit && npx expo lint && npx expo-doctor
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Build for the stores (EAS, in the cloud)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Needs a free Expo account (`npx eas-cli@latest login`), plus a Google Play developer account and an Apple Developer account for publishing.
 
-## Join the community
+```bash
+npx eas-cli@latest build --profile preview --platform android    # installable APK for testers
+npx eas-cli@latest build --profile production --platform android # .aab for Google Play
+npx eas-cli@latest build --profile production --platform ios     # for the App Store / TestFlight
+npx eas-cli@latest submit --platform android|ios                 # upload to the store
+```
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+App identifiers: `org.kodataltd.formlex` (Android package and iOS bundle ID). After publishing, put the store links in the website under Admin → Brand & footer → Mobile apps.
