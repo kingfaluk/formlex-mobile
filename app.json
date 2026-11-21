@@ -10,7 +10,6 @@
     "description": "Legal documents drafted and reviewed for your country.",
     "ios": {
       "bundleIdentifier": "org.kodataltd.formlex",
-      "buildNumber": "1",
       "supportsTablet": true,
       "icon": "./assets/images/icon.png",
       "config": {
@@ -20,7 +19,6 @@
     },
     "android": {
       "package": "org.kodataltd.formlex",
-      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#1d5a48",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
